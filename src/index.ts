@@ -5,4 +5,4 @@ export * as mPremium from './models/premium';
 export * as mReminder from './models/reminder';
 export * as mSettings from './models/settings';
 export * as mUser from './models/user';
-export { fetchGuild, updateGuild, fetchUser, updateUser } from './mongodb'
+export { ReiMongoDB, ReiOptions } from './mongodb';

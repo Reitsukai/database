@@ -1,37 +1,75 @@
+import * as mongoose from 'mongoose';
 import mUser from './models/user';
 import mGuild from './models/guild';
 
-export const fetchGuild = async (id: string) => {
-	let guildDB = await mGuild.findOne({ id: id });
+export class ReiMongoDB {
+	private _dbString: string;
+	public connections: mongoose.Connection | undefined;
 
-	if (guildDB) {
-		return guildDB;
-	} else {
-		guildDB = new mGuild({
-			id: id,
-			registeredAt: Date.now()
-		});
-		await guildDB.save().catch((err: Error) => console.log(err));
-		return guildDB;
+	constructor(options: ReiOptions) {
+		if (!options.dbString) {
+			throw new Error('No dbString provided');
+		}
+
+		this._dbString = options.dbString;
+		this.connections = undefined;
+		mongoose.connect(this._dbString)
 	}
-};
 
-export const updateGuild = async (id: string, fieldUpdate: Object) => {
-	return await mGuild.findOneAndUpdate({ id }, fieldUpdate, { new: true });
-};
-
-export const fetchUser = async (id: string) => {
-	let userDB = await mUser.findOne({ discordId: id });
-
-	if (userDB) {
-		return userDB;
-	} else {
-		userDB = new mUser({ discordId: id });
-		await userDB.save().catch((err: Error) => console.log(err));
-		return userDB;
+	get dbString() {
+		return this._dbString;
 	}
-};
 
-export const updateUser = async (id: string, fieldUpdate: Object) => {
-	return await mUser.findOneAndUpdate({ id }, fieldUpdate, { new: true });
-};
+	public connect() {
+		return new Promise((resolve, reject) => {
+			const options = {};
+			if (!this.connections) {
+				this.connections = mongoose.connection
+			}
+
+			mongoose.connect(this.dbString, options)
+				.then(() => resolve(this.connections))
+				.catch((err) => reject(err));
+		})
+	}
+
+	public async fetchGuild(id: string) {
+		let guildDB = await mGuild.findOne({ id: id });
+
+		if (guildDB) {
+			return guildDB;
+		} else {
+			guildDB = new mGuild({
+				id: id,
+				registeredAt: Date.now()
+			});
+			await guildDB.save().catch((err: Error) => console.log(err));
+			return guildDB;
+		}
+	}
+
+	public async updateGuild(id: string, fieldUpdate: {}){
+		return await mGuild.findOneAndUpdate({ id }, fieldUpdate, { new: true });
+	}
+
+	public async fetchUser(id: string) {
+		let userDB = await mUser.findOne({ discordId: id });
+
+		if (userDB) {
+			return userDB;
+		} else {
+			userDB = new mUser({ discordId: id });
+			await userDB.save().catch((err: Error) => console.log(err));
+			return userDB;
+		}
+	}
+
+	public async updateUser(id: string, fieldUpdate: {}){
+		return await mUser.findOneAndUpdate({ id }, fieldUpdate, { new: true });
+	}
+
+}
+
+export interface ReiOptions {
+	dbString: string
+}
