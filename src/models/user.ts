@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-const roles = ['user', 'vip', 'mod', 'owner'];
+const roles = ['user', 'vip', 'mod', 'owner', 'designer', 'donator'];
 
 const UserSchema = new Schema({
     discordId: { type: String, unique: true },
