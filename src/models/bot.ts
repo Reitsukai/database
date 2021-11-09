@@ -1,4 +1,10 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+
+export interface IBot extends Document {
+    id: string;
+    isBan: boolean;
+    lastOnline: number;
+}
 
 const botSchema = new Schema({
     id: { type: String, unique: true },
@@ -6,5 +12,5 @@ const botSchema = new Schema({
     lastOnline: { type: Number, default: Date.now() }
 })
 
-const Bot = model('Bot', botSchema);
-export default Bot;
+const mBot = model<IBot>('Bot', botSchema);
+export default mBot;

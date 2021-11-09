@@ -1,5 +1,17 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
 const roles = ['user', 'vip', 'mod', 'owner', 'designer', 'donator'];
+
+export interface IUser extends Document {
+    discordId: string;
+    nickname: string;
+    avatar: string;
+    role: string;
+    sex: string;
+    money: number;
+    gem: number;
+    level: number;
+    exp: number;
+}
 
 const UserSchema = new Schema({
     discordId: { type: String, unique: true },
@@ -13,5 +25,5 @@ const UserSchema = new Schema({
     exp: { type: Number, default: 0, index: true }
 })
 
-const User = model('User', UserSchema);
+const User = model<IUser>('User', UserSchema);
 export default User;

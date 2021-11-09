@@ -1,9 +1,14 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+
+export interface IEconomy extends Document {
+    id: string,
+    inventory: Object;
+}
 
 const economySchema = new Schema({
     id: { type: String, unique: true, index: true },
     inventory: { type: Object, default: {} }
 })
 
-const Economy = model('Economy', economySchema)
-export default Economy;
+const mEconomy = model<IEconomy>('Economy', economySchema)
+export default mEconomy;

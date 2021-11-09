@@ -1,4 +1,20 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+
+export interface IGuild extends Document {
+    id : string;
+    registeredAt: Number;
+    prefix: string;
+    language: string;
+    isBan: boolean;
+    watchBot: IWatchBot;
+}
+
+interface IWatchBot {
+    status: boolean;
+    channel: string;
+    watchList: Array<string>;
+    ignoreList: Array<string>;
+}
 
 const guildSchema = new Schema({
     id: { type: String, unique: true },
@@ -15,5 +31,5 @@ const guildSchema = new Schema({
 
 })
 
-const Guild = model('Guild', guildSchema);
-export default Guild;
+const mGuild = model<IGuild>('Guild', guildSchema);
+export default mGuild;

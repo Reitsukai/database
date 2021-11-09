@@ -1,4 +1,10 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+
+export interface ISettings extends Document {
+    id: string;
+    userBan: Array<string>;
+    guildBan: Array<string>;
+}
 
 const settingsSchema = new Schema({
     id: { type: String, unique: true },
@@ -6,5 +12,5 @@ const settingsSchema = new Schema({
     guildBan: { type: Array, default: [] },
 })
 
-const Settings = model('Settings', settingsSchema);
-export default Settings
+const mSettings = model<ISettings>('Settings', settingsSchema);
+export default mSettings

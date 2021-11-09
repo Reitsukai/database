@@ -1,4 +1,11 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+
+export interface IPremium extends Document {
+    id: string,
+    premiumType: string;
+    status: boolean;
+    end: number;
+}
 
 const premiumSchema = new Schema({
     id: { type: String, unique: true },
@@ -7,5 +14,5 @@ const premiumSchema = new Schema({
     end: { type: Number, default: 0 }
 });
 
-const Premium = model('Premium', premiumSchema);
-export default Premium;
+const mPremium = model<IPremium>('Premium', premiumSchema);
+export default mPremium;

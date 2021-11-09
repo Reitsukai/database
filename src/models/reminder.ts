@@ -1,4 +1,13 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document } from 'mongoose';
+
+export interface IReminder extends Document {
+    server: string;
+    channel: string;
+    user: string;
+    content: string;
+    createdAt: string;
+    completedAt: string;
+}
 
 const reminderSchema = new Schema({
     server: { type: String, required: true, index: true },
@@ -9,5 +18,5 @@ const reminderSchema = new Schema({
     completedAt: { type: Date, required: true, index: true },
 });
 
-const Reminder = model('Reminder', reminderSchema);
-export default Reminder;
+const mReminder = model<IReminder>('Reminder', reminderSchema);
+export default mReminder;
