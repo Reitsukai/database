@@ -1,8 +1,8 @@
-export * as mBot from './models/bot';
-export * as mEconomy from './models/economy';
-export * as mGuild from './models/guild';
-export * as mPremium from './models/premium';
-export * as mReminder from './models/reminder';
-export * as mSettings from './models/settings';
-export * as mUser from './models/user';
+export * from './models/bot';
+export * from './models/economy';
+export * from './models/guild';
+export * from './models/premium';
+export * from './models/reminder';
+export * from './models/settings';
+export * from './models/user';
 export { ReiMongoDB, ReiOptions } from './mongodb';
