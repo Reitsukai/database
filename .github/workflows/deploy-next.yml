@@ -1,0 +1,52 @@
+name: Continuous Delivery
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: The branch that is being deployed. Should be a branch on the given repository
+        required: false
+        default: dev
+      repository:
+        description: The {owner}/{repository} that is being deployed.
+        required: false
+        default: reitsukai/database
+  push:
+    branches:
+      - dev
+
+jobs:
+  Publish:
+    name: Publish Next to npm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Project
+        uses: actions/checkout@ec3a7ce113134d7a93b817d10a8272cb61118579 # renovate: tag=v2
+        with:
+          fetch-depth: 0
+          repository: ${{ github.event.inputs.repository || 'reitsukai/database' }}
+          ref: ${{ github.event.inputs.ref || 'dev' }}
+      - name: Use Node.js v16
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # renovate: tag=v2
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - name: Restore CI Cache
+        uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # renovate: tag=v2.1.6
+        id: cache-restore
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-16-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Dependencies if Cache Miss
+        if: ${{ !steps.cache-restore.outputs.cache-hit }}
+        run: yarn --immutable
+      - name: Bump Version & Publish
+        run: |
+          # Resolve the tag to be used. "next" for push events, "pr-{prNumber}" for dispatch events.
+          TAG=$([[ ${{ github.event_name }} == 'push' ]] && echo 'next'
+          # Bump the version
+          yarn standard-version --skip.commit --skip.tag --prerelease "${TAG}.$(git rev-parse --verify --short HEAD)"
+          # Publish to NPM
+          npm publish --tag ${TAG} || true
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
