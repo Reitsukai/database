@@ -1,4 +1,4 @@
-ame: NPM Auto Deprecate
+name: NPM Auto Deprecate
 
 on:
   schedule:

@@ -43,7 +43,7 @@ jobs:
       - name: Bump Version & Publish
         run: |
           # Resolve the tag to be used. "next" for push events, "pr-{prNumber}" for dispatch events.
-          TAG=$([[ ${{ github.event_name }} == 'push' ]] && echo 'next'
+          TAG=$([[ ${{ github.event_name }} == 'push' ]] && echo 'next')
           # Bump the version
           yarn standard-version --skip.commit --skip.tag --prerelease "${TAG}.$(git rev-parse --verify --short HEAD)"
           # Publish to NPM
